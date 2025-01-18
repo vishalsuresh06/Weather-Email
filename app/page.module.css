@@ -1,168 +1,196 @@
-.page {
-  --gray-rgb: 0, 0, 0;
-  --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
-  --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-
-  display: grid;
-  grid-template-rows: 20px 1fr 20px;
-  align-items: center;
-  justify-items: center;
-  min-height: 100svh;
-  padding: 80px;
-  gap: 64px;
-  font-family: var(--font-geist-sans);
-}
-
-@media (prefers-color-scheme: dark) {
-  .page {
-    --gray-rgb: 255, 255, 255;
-    --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
-    --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-  }
-}
-
+/* Main container for the entire page */
 .main {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  grid-row-start: 2;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full viewport height */
+  width: 100%;
+  position: relative;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.7
+  ); /* Semi-transparent background overlay */
+  color: white; /* Default text color */
+  overflow: hidden; /* Ensure content stays within bounds */
 }
 
-.main ol {
-  font-family: var(--font-geist-mono);
-  padding-left: 0;
-  margin: 0;
-  font-size: 14px;
-  line-height: 24px;
-  letter-spacing: -0.01em;
-  list-style-position: inside;
+/* Video background styling */
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures video covers the entire background */
+  z-index: -1; /* Places the video behind all other content */
 }
 
-.main li:not(:last-of-type) {
-  margin-bottom: 8px;
+/* Title styling */
+.title {
+  font-size: 3rem; /* Large title text */
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2rem; /* Adds space below the title */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Adds a subtle shadow for readability */
 }
 
-.main code {
-  font-family: inherit;
-  background: var(--gray-alpha-100);
-  padding: 2px 4px;
-  border-radius: 4px;
+/* Body container styling */
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem; /* Space between input and button */
+  z-index: 1; /* Ensures it's above the video */
+}
+
+/* Input field styling */
+.inputField {
+  padding: 0.8rem 1rem; /* Internal padding for a better user experience */
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px; /* Rounded corners */
+  width: 300px; /* Fixed width for consistent design */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adds a slight shadow for a 3D effect */
+  outline: none; /* Removes default outline */
+  margin-left: 10px;
+}
+
+/* Change input background color when focused */
+.inputField:focus {
+  transition: 0.3s ease; /* Smooth transition effect */
+  background-color: rgba(255, 255, 255, 0.9); /* Slightly brighter background */
+}
+
+/* Submit button styling */
+.submitButton {
+  padding: 0.8rem 1.2rem; /* Internal padding for the button */
+  font-size: 1rem;
+  background-color: #007bff; /* Primary blue color */
+  color: white; /* White text */
+  border: none;
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Changes cursor to pointer on hover */
+  transition: background-color 0.3s ease; /* Smooth color change on hover */
+}
+
+/* Change button appearance on hover */
+.submitButton:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Style for the settings button container */
+.settingsButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex; /* Ensures proper alignment for content inside */
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(
+    255,
+    255,
+    255
+  ); /* Subtle background for better visibility */
+  border: 1px solid rgba(228, 228, 228, 0.2); /* White border with transparency */
+  border-radius: 15%;
+  width: 40px;
+  height: 40px; /* Consistent size */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth transitions for hover effect */
+}
+
+/* Hover effect for settings button */
+.settingsButton:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Change background on hover */
+  filter: invert(1);
+}
+
+/* Style for the settings icon */
+.settingsIcon {
+  font-size: 1.5rem;
+  color: inherit; /* Inherits color from the parent container */
+  width: 30px; /* Ensure consistent size for the icon */
+  height: 30px;
+  pointer-events: none; /* Prevents accidental clicks on the icon itself */
+}
+
+.settingsContainer {
+  background-color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  border-radius: 20px;
+  padding: 1rem;
+}
+
+.settingsLabel {
+  color: black;
+  margin-top: 0;
+}
+
+.checkboxContainer1,
+.checkboxContainer2 {
+  display: grid; /* Use grid layout */
+  grid-template-columns: repeat(2, 1fr); /* Create two equal-width columns */
+  gap: 1rem; /* Add spacing between items */
+  width: 100%; /* Ensure the container takes full width for better layout */
+}
+
+.checkbox {
+  margin-right: 0.5rem;
+}
+
+.checkboxLabel {
+  color: black;
+  text-align: left;
+}
+
+/* Weather container styling */
+.weatherContainer {
+  margin-top: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  width: 100%;
+  text-align: left;
+}
+
+/* Weather section title */
+.weatherLabel {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* Individual weather detail */
+.weatherDetail {
+  font-size: 18px;
+  color: #444;
+  margin: 8px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Styling for key and value in weather details */
+.weatherDetail strong {
+  color: #000;
   font-weight: 600;
 }
 
-.ctas {
-  display: flex;
-  gap: 16px;
-}
-
-.ctas a {
-  appearance: none;
-  border-radius: 128px;
-  height: 48px;
-  padding: 0 20px;
-  border: none;
-  border: 1px solid transparent;
-  transition:
-    background 0.2s,
-    color 0.2s,
-    border-color 0.2s;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Message when no data is available */
+.noDataMessage {
   font-size: 16px;
-  line-height: 20px;
-  font-weight: 500;
-}
-
-a.primary {
-  background: var(--foreground);
-  color: var(--background);
-  gap: 8px;
-}
-
-a.secondary {
-  border-color: var(--gray-alpha-200);
-  min-width: 180px;
-}
-
-.footer {
-  grid-row-start: 3;
-  display: flex;
-  gap: 24px;
-}
-
-.footer a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.footer img {
-  flex-shrink: 0;
-}
-
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
-
-  .footer a:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-}
-
-@media (max-width: 600px) {
-  .page {
-    padding: 32px;
-    padding-bottom: 80px;
-  }
-
-  .main {
-    align-items: center;
-  }
-
-  .main ol {
-    text-align: center;
-  }
-
-  .ctas {
-    flex-direction: column;
-  }
-
-  .ctas a {
-    font-size: 14px;
-    height: 40px;
-    padding: 0 16px;
-  }
-
-  a.secondary {
-    min-width: auto;
-  }
-
-  .footer {
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
+  color: #777;
+  text-align: center;
+  margin-top: 10px;
+  font-style: italic;
 }
