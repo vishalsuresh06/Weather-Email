@@ -49,8 +49,8 @@ export default function Home() {
   const [country, setCountry] = React.useState("");
   const [location, setLocation] = React.useState<Location | null>(null);
   const [weather, setWeather] = React.useState<Weather | null>(null);
-  const [phoneNumber, setPhoneNumber] = React.useState("");
-  const [smsSent, setSmsSent] = React.useState(false);
+  const [email, setEmail] = React.useState("");
+  const [recurring, setRecurring] = React.useState(false);
   const [options, setOptions] = React.useState([
     true, // Temperature (2 m)
     false, // Relative Humidity
@@ -69,6 +69,7 @@ export default function Home() {
 
   // Toggle display of settings menu
   const toggleSettings = () => setSettings(!settings);
+  const toggleRecurring = () => setRecurring(!recurring);
 
   // Toggle individual weather options
   const toggleOption = (index: number) => {
@@ -313,17 +314,30 @@ export default function Home() {
 
             {/* Phone number input */}
 
-            <div className={styles.phoneNumberContainer}>
+            <div className={styles.emailContainer}>
               <input
                 type="text"
-                placeholder="Enter phone number"
+                placeholder="Enter email address"
                 className={styles.inputField}
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
-              <button className={styles.submitButton}>Send SMS</button>
+              <button className={styles.emailSubmitButton}>Send Email</button>
+
+              <div className={styles.emailCheckboxContainer}>
+                <input
+                  type="checkbox"
+                  className={styles.emailCheckbox}
+                  checked={recurring}
+                  onChange={toggleRecurring}
+                />
+                <label className={styles.emailCheckboxLabel}>
+                  Recurring Emails
+                </label>
+              </div>
             </div>
           </div>
+
           {/* Settings menu */}
           {settings && (
             <div className={styles.settingsContainer}>
