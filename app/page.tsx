@@ -2,45 +2,9 @@
 
 import React from "react";
 import styles from "./page.module.css";
-
-// Interfaces to define types for location and weather data
-interface Location {
-  lat: number;
-  long: number;
-}
-
-interface Weather {
-  apparent_temperature: number | null;
-  dewpoint_2m: number | null;
-  interval: number | null;
-  precipitation: number | null;
-  precipitation_probability: number | null;
-  rain: number | null;
-  relative_humidity_2m: number | null;
-  showers: number | null;
-  snow_depth: number | null;
-  snowfall: number | null;
-  temperature_2m: number | null;
-  time: string | null;
-}
-
-function isoToRegular(isoString: string): string {
-  const date = new Date(isoString);
-
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  let hours = date.getHours();
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  const seconds = date.getSeconds().toString().padStart(2, "0");
-
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12; // Convert 0 to 12 for 12 AM
-
-  return `${month}/${day}/${year}, ${hours
-    .toString()
-    .padStart(2, "0")}:${minutes}:${seconds} ${ampm}`;
-}
+import { isoToRegular } from "./utils/dateUtil";
+import { fetchGeolocation, Location } from "./apis/OpenCageAPI";
+import { fetchWeather, Weather } from "./apis/Weather";
 
 export default function Home() {
   // States to manage user inputs and API responses
@@ -64,7 +28,6 @@ export default function Home() {
     false, // Snow Depth
   ]);
   const [settings, setSettings] = React.useState(false);
-
   const CAGEAPI_KEY = process.env.NEXT_PUBLIC_OPENCAGE_API_KEY;
 
   // Toggle display of settings menu
@@ -77,84 +40,19 @@ export default function Home() {
     setOptions(updatedOptions);
   };
 
-  // Fetch geolocation based on city, state, and country
-  const fetchGeolocation = async (): Promise<Location | null> => {
-    try {
-      if (!city || !country) {
-        alert("Please enter both city and country.");
-        return null;
-      }
-
-      // Construct the API URL
-      let url = `https://api.opencagedata.com/geocode/v1/json?q=${city}`;
-      if (state) url += `,+${state}`;
-      url += `,+${country}&key=${CAGEAPI_KEY}`;
-
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch geolocation data.");
-
-      const data = await res.json();
-      if (data.results?.length) {
-        const { lat, lng } = data.results[0].geometry;
-        return { lat, long: lng };
-      } else {
-        alert("No geolocation data found for the entered location.");
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching geolocation:", error);
-      alert("An error occurred while fetching geolocation data.");
-      return null;
-    }
-  };
-
-  // Fetch weather data based on coordinates
-  const fetchWeather = async (coords: Location): Promise<Weather | null> => {
-    try {
-      // Construct fields parameter based on selected options
-      const fields = [
-        options[0] && "temperature_2m",
-        options[1] && "relative_humidity_2m",
-        options[2] && "dewpoint_2m",
-        options[3] && "apparent_temperature",
-        options[4] && "precipitation_probability",
-        options[5] && "precipitation",
-        options[6] && "rain",
-        options[7] && "showers",
-        options[8] && "snowfall",
-        options[9] && "snow_depth",
-      ]
-        .filter(Boolean)
-        .join(",");
-
-      const weatherURL = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.long}&current=${fields}&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto`;
-      const res = await fetch(weatherURL);
-      if (!res.ok) throw new Error("Failed to fetch weather data.");
-
-      const data = await res.json();
-      return data.current ?? null;
-    } catch (error) {
-      console.error("Error fetching weather data:", error);
-      alert("An error occurred while fetching weather data.");
-      return null;
-    }
-  };
-
   // Main handler for form submission
   const handleSubmit = async () => {
     try {
-      const coords = await fetchGeolocation();
+      const coords = await fetchGeolocation(city, state, country, CAGEAPI_KEY!);
       if (!coords) return;
 
       setLocation(coords);
-      const weatherData = await fetchWeather(coords);
+      const weatherData = await fetchWeather(coords, options);
       if (weatherData) {
-        setWeather(weatherData);
         setWeather({
           ...weatherData,
           time: weatherData.time ? isoToRegular(weatherData.time) : null,
         });
-        console.log(weatherData.time);
       }
     } catch (error) {
       console.error("Error handling submit:", error);
