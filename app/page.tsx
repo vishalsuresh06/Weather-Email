@@ -13,8 +13,7 @@ export default function Home() {
   const [country, setCountry] = React.useState("");
   const [location, setLocation] = React.useState<Location | null>(null);
   const [weather, setWeather] = React.useState<Weather | null>(null);
-  const [phoneNumber, setPhoneNumber] = React.useState("");
-  const [smsSent, setSmsSent] = React.useState(false);
+  const [email, setEmail] = React.useState("");
   const [options, setOptions] = React.useState([
     true, // Temperature (2 m)
     false, // Relative Humidity
@@ -57,6 +56,26 @@ export default function Home() {
     } catch (error) {
       console.error("Error handling submit:", error);
       alert("An unexpected error occurred. Please try again.");
+    }
+  };
+
+  const handleSendEmail = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          body: JSON.stringify(weather, null, 2), // or format as you'd like
+        }),
+        mode: "no-cors",
+      });
+
+      const result = await response.json();
+      alert(result.message || "Email sent");
+    } catch (err) {
+      console.error("Failed to send email", err);
+      alert("Error sending email");
     }
   };
 
@@ -214,12 +233,17 @@ export default function Home() {
             <div className={styles.phoneNumberContainer}>
               <input
                 type="text"
-                placeholder="Enter phone number"
+                placeholder="Enter Email Address"
                 className={styles.inputField}
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
-              <button className={styles.submitButton}>Send SMS</button>
+              <button
+                className={styles.sendEmailButton}
+                onClick={handleSendEmail}
+              >
+                Send Email
+              </button>
             </div>
           </div>
           {/* Settings menu */}

@@ -194,3 +194,35 @@
   margin-top: 10px;
   font-style: italic;
 }
+
+.saveButton {
+  margin-top: 10px;
+  padding: 0.5rem 0.7rem; /* Internal padding for the button */
+  font-size: 1rem;
+  background-color: #007bff; /* Primary blue color */
+  color: white; /* White text */
+  border: none;
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Changes cursor to pointer on hover */
+  transition: background-color 0.3s ease;
+}
+
+.saveButton:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.sendEmailButton {
+  margin-left: 20px;
+  padding: 0.6rem 0.8rem; /* Internal padding for the button */
+  font-size: 1rem;
+  background-color: #007bff; /* Primary blue color */
+  color: white; /* White text */
+  border: none;
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Changes cursor to pointer on hover */
+  transition: background-color 0.3s ease;
+}
+
+.sendEmailButton:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
